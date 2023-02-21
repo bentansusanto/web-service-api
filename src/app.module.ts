@@ -12,7 +12,8 @@ import { AuthModule } from './auth/auth.module';
       isGlobal: true,
     }),
     MongooseModule.forRoot(
-      process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/web_server',
+      process.env.MONGO_URI ||
+        'mongodb+srv://tansusanto194:y1Zh9FkX8X0v0iPD@cluster0.ahxme83.mongodb.net/web_server?retryWrites=true&w=majority',
     ),
     AuthModule,
   ],
