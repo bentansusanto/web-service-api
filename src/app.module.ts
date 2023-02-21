@@ -12,8 +12,7 @@ import { AuthModule } from './auth/auth.module';
       isGlobal: true,
     }),
     MongooseModule.forRoot(
-      process.env.MONGO_URI ||
-        'mongodb://mongo:BtoWBX2psTRDlWMLPgzF@containers-us-west-170.railway.app:5556',
+      process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/service_api',
     ),
     AuthModule,
   ],
