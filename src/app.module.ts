@@ -11,7 +11,9 @@ import { AuthModule } from './auth/auth.module';
       envFilePath: '.env',
       isGlobal: true,
     }),
-    MongooseModule.forRoot(process.env.MONGO_URI || ''),
+    MongooseModule.forRoot(
+      'mongodb://mongo:BtoWBX2psTRDlWMLPgzF@containers-us-west-170.railway.app:5556',
+    ),
     AuthModule,
   ],
   controllers: [AppController],
