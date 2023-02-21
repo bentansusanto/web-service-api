@@ -1,4 +1,8 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { User } from './schema/user.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
@@ -6,6 +10,7 @@ import { SignUpDto } from './dto/signup.dto';
 import * as bcrypt from 'bcrypt';
 import { SignInDto } from './dto/signin.dto';
 import { JwtService } from '@nestjs/jwt';
+import { Response, Request } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -22,18 +27,19 @@ export class AuthService {
     }
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
-    const userId = await this.userModel.create({
+    const user = await this.userModel.create({
       fullName,
       phoneNumber,
       email,
       password: hashPassword,
     });
-    const user = await this.userModel.findOne({ _id: userId });
-
-    return user;
+    return {
+      message: 'Success register',
+      user,
+    };
   }
 
-  async login(signInDto: SignInDto): Promise<any> {
+  async login(signInDto: SignInDto, res: Response): Promise<any> {
     const { email, password } = signInDto;
     const user = await this.userModel.findOne({ email });
     if (!user) {
@@ -43,11 +49,41 @@ export class AuthService {
     if (!match) {
       throw new BadRequestException('Invalid Password');
     }
-    const jwt = await this.jwtService.signAsync({ _id: user._id });
+    const jwt = this.jwtService.sign({ _id: user._id });
+
+    res.cookie('jwt', jwt, { httpOnly: true });
 
     return {
       message: 'Success Login',
       token: jwt,
+    };
+  }
+
+  async user(request: Request) {
+    try {
+      const cookie = request.cookies['jwt'];
+      const data = await this.jwtService.verifyAsync(cookie);
+      if (!data) {
+        throw new UnauthorizedException({
+          message: 'Please login',
+        });
+      }
+      const user = await this.userModel.findOne({ _id: data['_id'] });
+      return {
+        user,
+      };
+    } catch (error) {
+      throw new UnauthorizedException({
+        message: 'Please login',
+      });
+    }
+  }
+
+  async logout(res: Response) {
+    res.clearCookie('jwt');
+
+    return {
+      message: 'Success logout',
     };
   }
 }
