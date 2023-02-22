@@ -11,6 +11,13 @@ export class CustomersService {
     private customerModel: Model<Customers>,
   ) {}
 
+  async findAllCustomer(): Promise<any> {
+    const customers = await this.customerModel.find();
+    return {
+      customers,
+    };
+  }
+
   async createCustomer(customersDto: CustomersDto): Promise<any> {
     const { names, email, phoneNumber, companyName, description, filePrd } =
       customersDto;
