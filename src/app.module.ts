@@ -7,7 +7,6 @@ import { AuthModule } from './auth/auth.module';
 import { CustomersModule } from './customers/customers.module';
 import { BlogsModule } from './blogs/blogs.module';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({
