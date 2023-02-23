@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Customers } from './schema/customer.schema';
 import { Model } from 'mongoose';
@@ -18,6 +18,17 @@ export class CustomersService {
     };
   }
 
+  async findCustomerById(id: string): Promise<any> {
+    const customerId = await this.customerModel.findById(id);
+    if (!customerId) {
+      throw new NotFoundException('Customer not found');
+    }
+
+    return {
+      customerId,
+    };
+  }
+
   async createCustomer(customersDto: CustomersDto): Promise<any> {
     const { names, email, phoneNumber, companyName, description, filePrd } =
       customersDto;
@@ -30,10 +41,35 @@ export class CustomersService {
       description,
       filePrd,
     });
-
     return {
       message: 'Success created customers',
       data: customer,
+    };
+  }
+
+  async updateCustomer(id: string, customerDto: CustomersDto): Promise<any> {
+    const customer = await this.customerModel.findByIdAndUpdate(
+      id,
+      customerDto,
+    );
+    if (!customer) {
+      throw new NotFoundException('Custommer not found');
+    }
+    return {
+      message: 'Success Updated',
+      customer,
+    };
+  }
+
+  async deleteCustomer(id: string): Promise<any> {
+    const customer = await this.customerModel.findByIdAndDelete(id);
+
+    if (!customer) {
+      throw new NotFoundException('Custommer not found');
+    }
+
+    return {
+      message: 'Delete data success',
     };
   }
 }
