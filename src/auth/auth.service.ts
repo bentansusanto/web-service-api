@@ -62,7 +62,7 @@ export class AuthService {
   async user(request: Request) {
     try {
       const cookie = request.cookies['jwt'];
-      const data = await this.jwtService.verifyAsync(cookie);
+      const data = await this.jwtService.verify(cookie);
       if (!data) {
         throw new UnauthorizedException({
           message: 'Please login',
