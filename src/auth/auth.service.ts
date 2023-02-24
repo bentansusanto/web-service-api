@@ -63,11 +63,6 @@ export class AuthService {
     try {
       const cookie = request.cookies['jwt'];
       const data = await this.jwtService.verify(cookie);
-      if (!data) {
-        throw new UnauthorizedException({
-          message: 'Please login',
-        });
-      }
       const user = await this.userModel.findOne({ _id: data['_id'] });
       return {
         user,
