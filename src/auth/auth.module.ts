@@ -30,7 +30,7 @@ import { Auth, AuthSchema } from './schema/auth.schema';
     ConfigModule,
     MongooseModule.forFeature([{ name: Auth.name, schema: AuthSchema }]),
   ],
-  providers: [AuthService, JwtStrategy, LocalStrategy],
+  providers: [AuthService, JwtStrategy, LocalStrategy, ConfigService],
   controllers: [AuthController],
   exports: [AuthService, JwtStrategy, PassportModule],
 })
