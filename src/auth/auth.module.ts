@@ -27,6 +27,7 @@ import { Auth, AuthSchema } from './schema/auth.schema';
       }),
       inject: [ConfigService],
     }),
+    ConfigModule,
     MongooseModule.forFeature([{ name: Auth.name, schema: AuthSchema }]),
   ],
   providers: [AuthService, JwtStrategy, LocalStrategy],
