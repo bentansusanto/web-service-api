@@ -1,32 +1,49 @@
-import { Controller, Body, Post, Res, Get, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  // Headers,
+  HttpCode,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+// import { ConfigService } from '@nestjs/config';
+import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
-import { SignUpDto } from './dto/signup.dto';
-import { SignInDto } from './dto/signin.dto';
-import { Response, Request } from 'express';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
+import { Auth } from './schema/auth.schema';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService, // private readonly configService: ConfigService,
+  ) {}
+
   @Post('register')
-  register(@Body() signUpDto: SignUpDto) {
-    return this.authService.register(signUpDto);
+  async register(@Body() registerDto: RegisterDto): Promise<Auth> {
+    return await this.authService.register(registerDto);
   }
 
   @Post('login')
-  login(
-    @Body() signInDto: SignInDto,
-    @Res({ passthrough: true }) res: Response,
+  @HttpCode(200)
+  async login(
+    @Body() loginDto: LoginDto,
+    @Res({ passthrough: true }) response: Response,
+  ): Promise<Auth> {
+    return await this.authService.login(loginDto, response);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('profile')
+  @HttpCode(200)
+  async getProfile(
+    @Req()
+    req: Request,
   ) {
-    return this.authService.login(signInDto, res);
-  }
-
-  @Get('user')
-  user(@Req() request: Request) {
-    return this.authService.user(request);
-  }
-
-  @Post('logout')
-  logout(@Res({ passthrough: true }) res: Response) {
-    return this.authService.logout(res);
+    return await this.authService.getProfile(req);
   }
 }
