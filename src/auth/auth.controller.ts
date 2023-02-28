@@ -37,8 +37,8 @@ export class AuthController {
     return await this.authService.login(loginDto, response);
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Get('profile')
+  @UseGuards(AuthGuard('jwt'))
   @HttpCode(200)
   async getProfile(
     @Req()

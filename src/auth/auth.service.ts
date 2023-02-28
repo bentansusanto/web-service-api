@@ -81,13 +81,7 @@ export class AuthService {
 
   async userProfile(request: Request) {
     try {
-      const cookie = request.cookies['jwt'];
-
-      const data = await this.jwtService.verifyAsync(cookie);
-
-      if (!data) {
-        throw new UnauthorizedException('Unauthorization');
-      }
+      const data = request.user;
 
       const user = await this.authModel.findOne({ id: data['id'] });
 
