@@ -9,13 +9,6 @@ import { JwtStrategy } from './jwt.strategy';
 import { LocalStrategy } from './local.strategy';
 import { Auth, AuthSchema } from './schema/auth.schema';
 
-// const jwtFactory = {
-//   useFactory: async (configService: ConfigService) => ({
-//     secret: configService.get<string>('JWT_KEY'),
-//     signOptions: { expiresIn: '1h' },
-//   }),
-//   inject: [ConfigService],
-// };
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
