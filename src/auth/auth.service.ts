@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   BadRequestException,
   Injectable,
@@ -22,6 +23,19 @@ export class AuthService {
 
   async register(registerDto: RegisterDto): Promise<Auth | any> {
     const { names, phoneNumber, email, password } = registerDto;
+
+    if (!names || !phoneNumber || !email || !password) {
+      throw new BadRequestException('Cannot register, try again');
+    }
+
+    if (phoneNumber.length < 12) {
+      throw new BadRequestException('please input phone number');
+    }
+
+    if (password.length < 6) {
+      throw new BadRequestException('please input');
+    }
+
     const existUser = await this.authModel.findOne({ email });
     if (existUser) {
       throw new BadRequestException('User allready exist');
@@ -53,13 +67,6 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException('Invalid email or password');
     }
-
-    // const isPasswordMatched = await bcrypt.compare(password, user.password);
-
-    // if (!isPasswordMatched) {
-    //   throw new UnauthorizedException('Invalid email or password');
-    // }
-
     const token = this.jwtService.sign({ id: user._id });
 
     response.cookie('jwt', token, { httpOnly: true });
