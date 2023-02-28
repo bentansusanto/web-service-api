@@ -38,20 +38,27 @@ export class AuthService {
     return user;
   }
 
+  async validateUser(email: string, password: string): Promise<any> {
+    const user = await this.authModel.findOne({ email });
+    if (user && (await bcrypt.compare(password, user.password))) {
+      return user;
+    }
+  }
+
   async login(loginDto: LoginDto, response: Response): Promise<Auth | any> {
     const { email, password } = loginDto;
 
-    const user = await this.authModel.findOne({ email });
+    const user = await this.validateUser(email, password);
 
     if (!user) {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    const isPasswordMatched = await bcrypt.compare(password, user.password);
+    // const isPasswordMatched = await bcrypt.compare(password, user.password);
 
-    if (!isPasswordMatched) {
-      throw new UnauthorizedException('Invalid email or password');
-    }
+    // if (!isPasswordMatched) {
+    //   throw new UnauthorizedException('Invalid email or password');
+    // }
 
     const token = this.jwtService.sign({ id: user._id });
 
