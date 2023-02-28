@@ -7,6 +7,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { Auth, AuthSchema } from './schema/auth.schema';
+import { LocalStrategy } from './local.strategy';
 
 const jwtFactory = {
   useFactory: async (configService: ConfigService) => ({
@@ -21,7 +22,7 @@ const jwtFactory = {
     JwtModule.registerAsync(jwtFactory),
     MongooseModule.forFeature([{ name: Auth.name, schema: AuthSchema }]),
   ],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, LocalStrategy],
   controllers: [AuthController],
   exports: [AuthService, JwtStrategy, PassportModule],
 })
