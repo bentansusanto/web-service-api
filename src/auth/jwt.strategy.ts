@@ -1,5 +1,4 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { PassportStrategy } from '@nestjs/passport';
 import { Model } from 'mongoose';
@@ -10,12 +9,12 @@ import { Auth } from './schema/auth.schema';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     @InjectModel(Auth.name)
-    private readonly authModel: Model<Auth>,
-    configService: ConfigService,
+    private readonly authModel: Model<Auth>, // configService: ConfigService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: configService.get('JWT_KEY'),
+      // secretOrKey: configService.get('JWT_KEY'),
+      secretOrKey: process.env.JWT_KEY,
     });
   }
 

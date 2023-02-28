@@ -20,14 +20,12 @@ import { Auth, AuthSchema } from './schema/auth.schema';
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_KEY'),
+      useFactory: async (config: ConfigService) => ({
+        secret: config.get<string>('JWT_KEY'),
         signOptions: { expiresIn: '1h' },
       }),
       inject: [ConfigService],
     }),
-    ConfigModule,
     MongooseModule.forFeature([{ name: Auth.name, schema: AuthSchema }]),
   ],
   providers: [AuthService, JwtStrategy, LocalStrategy, ConfigService],
