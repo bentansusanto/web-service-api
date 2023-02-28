@@ -11,12 +11,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     @InjectModel(Auth.name)
     private readonly authModel: Model<Auth>,
-    configService: ConfigService,
+    private configService: ConfigService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: configService.get<string>('JWT_KEY'),
-      ignoreExpiration: false,
     });
   }
 
