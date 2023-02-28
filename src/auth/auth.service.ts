@@ -7,7 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { Model } from 'mongoose';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -79,7 +79,11 @@ export class AuthService {
     };
   }
 
-  async getProfile(req: Request) {
-    return req.user;
+  async logout(response: Response): Promise<any> {
+    response.clearCookie('jwt');
+
+    return {
+      message: 'Logout successs',
+    };
   }
 }

@@ -44,6 +44,12 @@ export class AuthController {
     @Req()
     req: Request,
   ) {
-    return await this.authService.getProfile(req);
+    return req.user;
+  }
+
+  @Post('logout')
+  @HttpCode(200)
+  async logout(@Res({ passthrough: true }) response: Response) {
+    return await this.authService.logout(response);
   }
 }
