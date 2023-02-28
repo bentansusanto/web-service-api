@@ -28,6 +28,7 @@ export class AuthController {
     return await this.authService.register(registerDto);
   }
 
+  @UseGuards(AuthGuard('local'))
   @Post('login')
   @HttpCode(200)
   async login(
