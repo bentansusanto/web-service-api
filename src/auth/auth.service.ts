@@ -7,7 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { Model } from 'mongoose';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -79,7 +79,25 @@ export class AuthService {
     };
   }
 
-  async logout(response: Response): Promise<any> {
+  async userProfile(request: Request) {
+    try {
+      const cookie = request.cookies['jwt'];
+
+      const data = await this.jwtService.verifyAsync(cookie);
+
+      if (!data) {
+        throw new UnauthorizedException('Unauthorization');
+      }
+
+      const user = await this.authModel.findOne({ id: data['id'] });
+
+      return user;
+    } catch (error) {
+      throw new UnauthorizedException('Unauthorization');
+    }
+  }
+
+  async logout(response: Response) {
     response.clearCookie('jwt');
 
     return {
