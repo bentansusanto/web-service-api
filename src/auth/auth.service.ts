@@ -28,11 +28,11 @@ export class AuthService {
       throw new BadRequestException('Cannot register, try again');
     }
 
-    if (phoneNumber.length < 12) {
+    if (phoneNumber.length <= 12) {
       throw new BadRequestException('please input phone number');
     }
 
-    if (password.length < 6) {
+    if (password.length <= 6) {
       throw new BadRequestException('please input');
     }
 

@@ -7,6 +7,8 @@ import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
 import { BlogsModule } from './blogs/blogs.module';
 import { CustomersModule } from './customers/customers.module';
+import { DestinationModule } from './destination/destination.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -20,6 +22,7 @@ import { CustomersModule } from './customers/customers.module';
     CustomersModule,
     BlogsModule,
     AuthModule,
+    DestinationModule,
   ],
   controllers: [AppController, AuthController],
   providers: [AppService, CustomersModule, BlogsModule, AuthModule],
