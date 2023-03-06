@@ -11,8 +11,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 // import { ConfigService } from '@nestjs/config';
-import { UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+// import { JwtService } from '@nestjs/jwt';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -22,8 +21,7 @@ import { Auth } from './schema/auth.schema';
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly authService: AuthService,
-    private readonly jwtService: JwtService,
+    private readonly authService: AuthService, // private readonly jwtService: JwtService,
   ) {}
 
   @Post('register')
@@ -37,15 +35,15 @@ export class AuthController {
     @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) res: Response,
   ): Promise<Auth | any> {
-    const { email, password } = loginDto;
+    // const { email, password } = loginDto;
 
-    const user = await this.authService.validateUser(email, password);
+    // const user = await this.authService.validateUser(email, password);
 
-    if (!user) {
-      throw new UnauthorizedException('Invalid email or password');
-    }
+    // if (!user) {
+    //   throw new UnauthorizedException('Invalid email or password');
+    // }
 
-    const token = this.jwtService.sign({ id: user._id });
+    const token = this.authService.login(loginDto);
 
     const cookieOption = {
       httpOnly: true,
