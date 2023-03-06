@@ -7,7 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { Model } from 'mongoose';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -59,7 +59,7 @@ export class AuthService {
     }
   }
 
-  async login(loginDto: LoginDto, req: Request): Promise<Auth | any> {
+  async login(loginDto: LoginDto, res: Response): Promise<Auth | any> {
     const { email, password } = loginDto;
 
     const user = await this.validateUser(email, password);
@@ -69,7 +69,7 @@ export class AuthService {
     }
     const token = this.jwtService.signAsync({ id: user._id });
 
-    req.res.cookie('jwt', token, {
+    res.cookie('jwt', token, {
       httpOnly: true,
       secure: true,
       maxAge: 3600000,
