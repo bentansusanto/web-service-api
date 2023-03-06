@@ -33,7 +33,7 @@ export class AuthController {
   @HttpCode(200)
   async login(
     @Body() loginDto: LoginDto,
-    @Res({ passthrough: true }) req: Request,
+    @Req() req: Request,
   ): Promise<Auth | any> {
     return await this.authService.login(loginDto, req);
   }
