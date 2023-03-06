@@ -7,7 +7,7 @@ import {
 // import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { Model } from 'mongoose';
 // import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
