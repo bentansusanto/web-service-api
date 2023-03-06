@@ -75,11 +75,9 @@ export class AuthService {
       maxAge: 3600000,
     });
 
-    delete user.password;
-
     return {
       message: 'Login success',
-      token,
+      // token,
     };
   }
 
