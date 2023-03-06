@@ -4,12 +4,12 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+// import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import { Model } from 'mongoose';
-import { LoginDto } from './dto/login.dto';
+// import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { Auth } from './schema/auth.schema';
 
@@ -17,8 +17,7 @@ import { Auth } from './schema/auth.schema';
 export class AuthService {
   constructor(
     @InjectModel(Auth.name)
-    private readonly authModel: Model<Auth>,
-    private readonly jwtService: JwtService,
+    private readonly authModel: Model<Auth>, // private readonly jwtService: JwtService,
   ) {}
 
   async register(registerDto: RegisterDto): Promise<Auth | any> {
@@ -59,31 +58,31 @@ export class AuthService {
     }
   }
 
-  async login(loginDto: LoginDto): Promise<Auth | any> {
-    const { email, password } = loginDto;
+  // async login(loginDto: LoginDto): Promise<Auth | any> {
+  //   const { email, password } = loginDto;
 
-    const user = await this.validateUser(email, password);
+  //   const user = await this.validateUser(email, password);
 
-    if (!user) {
-      throw new UnauthorizedException('Invalid email or password');
-    }
-    const token = this.jwtService.signAsync({ id: user._id });
+  //   if (!user) {
+  //     throw new UnauthorizedException('Invalid email or password');
+  //   }
+  //   const token = this.jwtService.signAsync({ id: user._id });
 
-    // response.cookie('jwt', token, {
-    //   httpOnly: true,
-    //   secure: true,
-    //   maxAge: 3600000,
-    // });
+  //   response.cookie('jwt', token, {
+  //     httpOnly: true,
+  //     secure: true,
+  //     maxAge: 3600000,
+  //   });
 
-    const cookie = `access_token=${token}; HttpOnly; Path=/; Max-Age=${
-      3600 * 24 * 7
-    }`;
+  //   const cookie = `token=${token}; HttpOnly: true; Path=/; Max-Age=${
+  //     3600 * 24 * 7
+  //   }`;
 
-    return {
-      message: 'Login success',
-      cookie,
-    };
-  }
+  //   return {
+  //     message: 'Login success',
+  //     cookie,
+  //   };
+  // }
 
   async userProfile(request: Request) {
     try {
@@ -97,11 +96,11 @@ export class AuthService {
     }
   }
 
-  async logout(response: Response) {
-    response.clearCookie('jwt');
+  // async logout(response: Response) {
+  //   response.clearCookie('jwt');
 
-    return {
-      message: 'Logout successs',
-    };
-  }
+  //   return {
+  //     message: 'Logout successs',
+  //   };
+  // }
 }

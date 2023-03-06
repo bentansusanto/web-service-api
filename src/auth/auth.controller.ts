@@ -11,6 +11,8 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 // import { ConfigService } from '@nestjs/config';
+import { UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -20,7 +22,8 @@ import { Auth } from './schema/auth.schema';
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly authService: AuthService, // private readonly configService: ConfigService,
+    private readonly authService: AuthService,
+    private readonly jwtService: JwtService,
   ) {}
 
   @Post('register')
@@ -32,9 +35,29 @@ export class AuthController {
   @HttpCode(200)
   async login(
     @Body() loginDto: LoginDto,
-    // @Res({ passthrough: true }) response: Response,
-  ): Promise<Auth> {
-    return await this.authService.login(loginDto);
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<Auth | any> {
+    const { email, password } = loginDto;
+
+    const user = await this.authService.validateUser(email, password);
+
+    if (!user) {
+      throw new UnauthorizedException('Invalid email or password');
+    }
+
+    const token = this.jwtService.sign({ id: user._id });
+
+    const cookieOption = {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 7,
+      path: '/',
+    };
+
+    res.cookie('jwt', token, cookieOption);
+    return {
+      message: 'Login success',
+      token,
+    };
   }
 
   @Get('profile')
@@ -50,6 +73,10 @@ export class AuthController {
   @Post('logout')
   @HttpCode(200)
   async logout(@Res({ passthrough: true }) response: Response) {
-    return await this.authService.logout(response);
+    response.clearCookie('jwt');
+
+    return {
+      message: 'Logout successs',
+    };
   }
 }
