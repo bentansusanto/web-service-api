@@ -7,7 +7,7 @@ import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
 import { BlogsModule } from './blogs/blogs.module';
 import { CustomersModule } from './customers/customers.module';
-import { DestinationModule } from './destination/destination.module';
+// import { DestinationModule } from './destination/destination.module';
 
 @Module({
   imports: [
@@ -22,7 +22,7 @@ import { DestinationModule } from './destination/destination.module';
     CustomersModule,
     BlogsModule,
     AuthModule,
-    DestinationModule,
+    // DestinationModule,
   ],
   controllers: [AppController, AuthController],
   providers: [AppService, CustomersModule, BlogsModule, AuthModule],
