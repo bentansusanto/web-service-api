@@ -33,29 +33,9 @@ export class AuthController {
   @HttpCode(200)
   async login(
     @Body() loginDto: LoginDto,
-    @Res({ passthrough: true }) res: Response,
+    @Res({ passthrough: true }) req: Request,
   ): Promise<Auth | any> {
-    // const { email, password } = loginDto;
-
-    // const user = await this.authService.validateUser(email, password);
-
-    // if (!user) {
-    //   throw new UnauthorizedException('Invalid email or password');
-    // }
-
-    const token = this.authService.login(loginDto);
-
-    const cookieOption = {
-      httpOnly: true,
-      maxAge: 60 * 60 * 24 * 7,
-      path: '/',
-    };
-
-    res.cookie('jwt', token, cookieOption);
-    return {
-      message: 'Login success',
-      token,
-    };
+    return await this.authService.login(loginDto, req);
   }
 
   @Get('profile')

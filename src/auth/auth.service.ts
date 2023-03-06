@@ -59,7 +59,7 @@ export class AuthService {
     }
   }
 
-  async login(loginDto: LoginDto): Promise<Auth | any> {
+  async login(loginDto: LoginDto, req: Request): Promise<Auth | any> {
     const { email, password } = loginDto;
 
     const user = await this.validateUser(email, password);
@@ -69,17 +69,14 @@ export class AuthService {
     }
     const token = this.jwtService.signAsync({ id: user._id });
 
-    // response.cookie('jwt', token, {
-    //   httpOnly: true,
-    //   secure: true,
-    //   maxAge: 3600000,
-    // });
-
-    // const cookie = `token=${token}; HttpOnly: true; Path=/; Max-Age=${
-    //   3600 * 24 * 7
-    // }`;
+    req.res.cookie('jwt', token, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 3600000,
+    });
 
     return {
+      message: 'Login success',
       token,
     };
   }
