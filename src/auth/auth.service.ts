@@ -67,7 +67,7 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException('Invalid email or password');
     }
-    const token = this.jwtService.sign({ id: user._id });
+    const token = this.jwtService.signAsync({ id: user._id });
 
     response.cookie('jwt', token, {
       httpOnly: true,
