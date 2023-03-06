@@ -69,11 +69,14 @@ export class AuthService {
     }
     const token = this.jwtService.sign({ id: user._id });
 
-    res.cookie('jwt', token, {
-      httpOnly: true,
-      secure: true,
-      maxAge: 3600000,
-    });
+    // res.setHeader('jwt', token, {
+    //   httpOnly: true,
+    //   secure: true,
+    //   maxAge: 3600000,
+    // });
+    res.setHeader('Set-Cookie', [
+      `token=${token}; HttpOnly; Max-Age=${60000 * 15};`,
+    ]);
 
     return {
       message: 'Login success',
