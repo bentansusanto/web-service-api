@@ -7,10 +7,7 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
-  app.enableCors({
-    origin: ['http://localhost:8000', 'https://web-service.herokuapp.com/'],
-    credentials: true,
-  });
+  app.enableCors();
 
   await app.listen(process.env.PORT || 8000);
 }
