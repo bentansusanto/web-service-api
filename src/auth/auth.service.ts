@@ -69,7 +69,11 @@ export class AuthService {
     }
     const token = this.jwtService.sign({ id: user._id });
 
-    response.cookie('jwt', token, { httpOnly: true });
+    response.cookie('jwt', token, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 3600000,
+    });
 
     delete user.password;
 
